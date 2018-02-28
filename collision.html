@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Collision Course</title>
+	<style type="text/css">
+		* { padding: 0; margin: 0;}
+		canvas { background: #eee; display: block; margin: 0 auto;}
+		h1, p { text-align: center; padding: .5em;}
+	</style>
 </head>
-<body>
-<canvas>
-	
-</canvas>
+<body onLoad="init();">
+<h1>Collision Course</h1>
+<canvas id="Collision" width="600" height="500"></canvas>
+<p><b>Directions:</b> A massive meteor shower is raining down on your city. Using the left and right arrow keys to align the turret</br> with the falling meteors. When the turret is aligned, use the spacebar to destroy the meteors before they hit the ground.</p>
 </body>
 </html>
