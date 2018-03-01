@@ -10,8 +10,40 @@
 	</style>
 </head>
 <body onLoad="init();">
-<h1>Collision Course</h1>
-<canvas id="Collision" width="600" height="500"></canvas>
-<p><b>Directions:</b> A massive meteor shower is raining down on your city. Using the left and right arrow keys to align the turret</br> with the falling meteors. When the turret is aligned, use the spacebar to destroy the meteors before they hit the ground.</p>
+	<h1>Collision Course</h1>
+	<canvas id="Collision" width="500" height="600"></canvas>
+	<p><b>Directions:</b> A massive meteor shower is raining down on your city. Using the left and right arrow keys to align the turret<br>with the falling meteors. When the turret is aligned, use the spacebar to destroy the meteors before they hit the ground.</p>
+	<script>
+		var canvas=document.getElementById("Collision");
+		var ctx=Collision.getContext("2d");
+		var turretSize=25;
+		var x=canvas.width/2;
+		var planetY=canvas.height*5;
+
+		function drawTurret() {
+			ctx.beginPath();
+			ctx.moveTo(x, canvas.height-turretSize);
+			ctx.lineTo(x+turretSize, canvas.height-turretSize);
+			ctx.lineTo(x+turretSize/2, canvas.height-turretSize*2);
+			ctx.fillStyle="#000000";
+			ctx.fill();
+			ctx.closePath();
+		}
+		function drawPlanet() {
+        	ctx.beginPath();
+        	ctx.arc(x, 3580, 3000, 5, 4.42, true);
+        	ctx.fillStyle="#35582D"
+        	ctx.fill();
+        	ctx.closePath();
+		}
+
+		function draw() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawTurret();
+			drawPlanet();
+			requestAnimationFrame(draw);
+		}
+		draw();
+	</script>
 </body>
 </html>
