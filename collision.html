@@ -17,22 +17,50 @@
 		var canvas=document.getElementById("Collision");
 		var ctx=Collision.getContext("2d");
 		var turretSize=25;
-		var x=canvas.width/2;
+		var turretX=canvas.width/2;
+		var planetX=canvas.width/2;
 		var planetY=canvas.height*5;
+		var leftPressed=false;
+		var rightPressed=false;
+		var spacePressed=false;
 
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup" , keyUpHandler, false);
+		function keyDownHandler(e) {
+			if(e.keyCode==39) {
+				rightPressed=true;
+			}
+			else if(e.keyCode==37) {
+				leftPressed=true;
+			}
+			else if(e.keyCode==32) {
+				spacePressed=true;
+			}
+		}
+		function keyUpHandler(e) {
+			if(e.keyCode==39) {
+				rightPressed=false;
+			}
+			else if(e.keyCode==37) {
+				leftPressed=false;
+			}
+			else if(e.keyCode==32) {
+				spacePressed=false;
+			}
+		}
 		function drawTurret() {
 			ctx.beginPath();
-			ctx.moveTo(x, canvas.height-turretSize);
-			ctx.lineTo(x+turretSize, canvas.height-turretSize);
-			ctx.lineTo(x+turretSize/2, canvas.height-turretSize*2);
+			ctx.moveTo(turretX, canvas.height-turretSize);
+			ctx.lineTo(turretX+turretSize, canvas.height-turretSize);
+			ctx.lineTo(turretX+turretSize/2, canvas.height-turretSize*2);
 			ctx.fillStyle="#000000";
 			ctx.fill();
 			ctx.closePath();
 		}
 		function drawPlanet() {
         	ctx.beginPath();
-        	ctx.arc(x, 3580, 3000, 5, 4.42, true);
-        	ctx.fillStyle="#35582D"
+        	ctx.arc(planetX, 3580, 3000, 5, 4.42, true);
+        	ctx.fillStyle="#35582D";
         	ctx.fill();
         	ctx.closePath();
 		}
@@ -41,6 +69,15 @@
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			drawTurret();
 			drawPlanet();
+			if(rightPressed && turretX < canvas.width-turretSize) {
+				turretX+=5;
+			}
+			else if(leftPressed && turretX > 0) {
+				turretX-=5;
+			}
+			//else if(spacePressed) {
+				//
+			//}
 			requestAnimationFrame(draw);
 		}
 		draw();
