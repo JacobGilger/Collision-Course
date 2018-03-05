@@ -12,7 +12,7 @@
 <body onLoad="init();">
 	<h1>Collision Course</h1>
 	<canvas id="Collision" width="500" height="600"></canvas>
-	<p><b>Directions:</b> A massive meteor shower is raining down on your city. Using the left and right arrow keys to align the turret<br>with the falling meteors. When the turret is aligned, use the spacebar to destroy the meteors before they hit the ground.</p>
+	<p><b>Directions:</b> A massive meteor shower is raining down on your city. Use the left and right arrow keys to align the turret<br>with the falling meteors. When the turret is aligned, use the spacebar to shoot the meteors before they hit the ground.</p>
 	<script>
 		var canvas=document.getElementById("Collision");
 		var ctx=Collision.getContext("2d");
@@ -51,6 +51,7 @@
 		function drawTurret() {
 			ctx.beginPath();
 			ctx.moveTo(turretX, canvas.height-turretSize);
+			ctx.lineTo(turretX+turretSize/2, canvas.height-turretSize*1.25)
 			ctx.lineTo(turretX+turretSize, canvas.height-turretSize);
 			ctx.lineTo(turretX+turretSize/2, canvas.height-turretSize*2);
 			ctx.fillStyle="#000000";
@@ -75,9 +76,9 @@
 			else if(leftPressed && turretX > 0) {
 				turretX-=5;
 			}
-			//else if(spacePressed) {
-				//
-			//}
+			else if(spacePressed) {
+				
+			}
 			requestAnimationFrame(draw);
 		}
 		draw();
