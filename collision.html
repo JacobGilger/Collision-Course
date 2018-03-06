@@ -93,7 +93,6 @@
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			drawTurret();
 			drawPlanet();
-			drawLaser();
 			drawMeteor();
 			if(rightPressed && turretX < canvas.width-turretSize) {
 				turretX+=5;
@@ -102,13 +101,13 @@
 				turretX-=5;
 			}
 			else if(spacePressed) {
-				
-			}
-			if(laserY<=laserSize) {
+				if(laserY<=laserSize) {
 
-			}
-			else{
-				laserY-=laserdY;
+				}
+				else{
+					drawLaser();
+					laserY-=laserdY;
+				}
 			}
 			if(meteorY+meteorRadius>planetY-planetRadius) {
 
