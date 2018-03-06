@@ -24,6 +24,7 @@
 		var meteorX=50;
 		var meteorY=50;
 		var meteorRadius=15;
+		var laserX=turretX;
 		var laserY=canvas.height-60;
 		var laserSize=25;
 		var laserdY=5;
@@ -31,6 +32,7 @@
 		var leftPressed=false;
 		var rightPressed=false;
 		var spacePressed=false;
+		var ready = true;
 
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup" , keyUpHandler, false);
@@ -42,7 +44,7 @@
 				leftPressed=true;
 			}
 			else if(e.keyCode===32) {
-				spacePressed=true;
+				//spacePressed=true;
 			}
 		}
 		function keyUpHandler(e) {
@@ -53,7 +55,9 @@
 				leftPressed=false;
 			}
 			else if(e.keyCode===32) {
-				spacePressed=false;
+				if(ready){
+					spacePressed=true;
+				}
 			}
 		}
 		function drawTurret() {
@@ -75,11 +79,12 @@
 		}
 		function drawLaser() {
 			ctx.beginPath();
-			ctx.moveTo(turretX+turretSize/2, laserY);
-			ctx.lineTo(turretX+turretSize/2, laserY-laserSize);
+			ctx.moveTo(laserX+turretSize/2, laserY);
+			ctx.lineTo(laserX+turretSize/2, laserY-laserSize);
 			ctx.strokeStyle="#f00";
 			ctx.stroke();
 			ctx.closePath();
+			
 		}
 		function drawMeteor() {
 			ctx.beginPath();
@@ -100,9 +105,12 @@
 			else if(leftPressed && turretX > 0) {
 				turretX-=5;
 			}
-			else if(spacePressed) {
+			if(spacePressed) {
 				if(laserY<=laserSize) {
-
+					spacePressed = false;
+					laserY=canvas.height-60;
+					laserX=turretX;
+					ready = true;
 				}
 				else{
 					drawLaser();
