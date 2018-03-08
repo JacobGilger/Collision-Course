@@ -39,6 +39,9 @@
           spacePressed=false,
           canFire=true;
 
+      var lives=3,
+          points=0;
+
       function allowFire() {
         canFire=true;
       }
@@ -47,14 +50,14 @@
         this.y=canvas.height-75
         canFire=false;
         setTimeout(allowFire,750);
-        this.shouldremove=false
+        this.shouldRemove=false
       }
 
       function newMeteor(){
-        this.x=randomNumberBetween(15,560)
+        this.x=randomNumberBetween(15,470)
         this.y = 0
         this.draw = 0
-        this.shouldremove=false
+        this.shouldRemove=false
         setTimeout(function(){meteors.push(new newMeteor)},1000);
       }
 
@@ -121,11 +124,22 @@
         meteors.forEach(function(meteor,a){
           lasers.forEach(function(laser,index){
             if(laser.y+laserSize<=meteor.y+(2*meteorRadius)&&laser.y+laserSize>=meteor.y&&laser.x>=meteor.x-(2*meteorRadius)&&laser.x<=meteor.x) {
-              meteor.shouldremove=true
-              laser.shouldremove=true
+              meteor.shouldRemove=true
+              laser.shouldRemove=true
+              points++;
             }
           })
         })
+      }
+      function drawPoints() {
+      	ctx.font="16px Arial";
+      	ctx.fillStyle="#333";
+      	ctx.fillText("Points: " +points, 8, 20);
+      }
+      function drawLives() {
+      	ctx.font="16px Arial";
+      	ctx.fillStyle="#333";
+      	ctx.fillText("Lives: " +lives, canvas.width-65, 20);
       }
 
       function draw() {
@@ -133,6 +147,8 @@
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           drawTurret();
           drawPlanet();
+          drawPoints();
+          drawLives();
           meteors.forEach(function(meteor,index){
             if(meteor.draw==0) {
               meteor.drawMeteor();
@@ -150,10 +166,9 @@
             lasers.forEach(function(laser,index){
               laser.y-=laserdY;
               if(laser.y==0){
-                laser.shouldremove=true
+                laser.shouldRemove=true
               }
-            })
-            
+            }) 
           }
           meteors.forEach(function(meteor,index){
             if(meteor.y+meteorRadius<=planetY-planetRadius) {
@@ -161,19 +176,16 @@
             }
             else {
               meteor.draw=1;
+              lives--;
             }
           })
-          //cleanup.
-          lasers.forEach(function(laser,index){
-            if(laser.shouldremove==true){
-              lasers.splice(index,1)
-            }
-          })
-          meteors.forEach(function(meteor,index){
-            if(meteor.shouldremove==true){
-              meteors.splice(index,1)
-            }
-          })
+          //cleanup
+          lasers = lasers.filter(laser => !laser.shouldRemove)
+          meteors = meteors.filter(meteor => !meteor.shouldRemove)
+          if(!lives) {
+            alert("Game Over! You got "+points+" point(s). Would you like to try again?")
+            document.location.reload();
+          }
         }catch(e){
           document.getElementById("e").innerHTML=e;
         }
