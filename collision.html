@@ -28,9 +28,7 @@
 
       var meteordY=5,
           meteorRadius=15,
-          meteors = [],
-          randomMin= meteorRadius*2,
-          randomMax= canvas.width;
+          meteors = [];
 
       var laserSize=25,
           laserdY=5,
@@ -39,32 +37,30 @@
       var leftPressed=false,
           rightPressed=false,
           spacePressed=false,
-          meteorDraw=0,
-          canFire=true,
-          fallMeteor=true;
+          canFire=true;
 
-      function getRandom(randomMin, randomMax) {
-        return Math.random() * (randomMax - randomMin) + randomMin;
-      }
       function allowFire() {
         canFire=true;
       }
-      function allowMeteor() {
-        fallMeteor=true;
-      }
       function newLaser(){
-        this.x=turretX;
-        this.y=canvas.height-75;
+        this.x=turretX
+        this.y=canvas.height-75
         canFire=false;
         setTimeout(allowFire,750);
-      }
-      function newMeteor() {
-        this.x=getRandom;
-        this.y=0-meteorRadius*2;
-        fallMeteor=false;
-        setTimeout(fallMeteor,750);
+        this.shouldremove=false
       }
 
+      function newMeteor(){
+        this.x=randomNumberBetween(15,560)
+        this.y = 0
+        this.draw = 0
+        this.shouldremove=false
+        setTimeout(function(){meteors.push(new newMeteor)},1000);
+      }
+
+      function randomNumberBetween(a,b){
+        return (Math.floor(Math.random()*(b-a))+1)+a
+      }
       document.addEventListener("keydown", keyDownHandler, false);
       document.addEventListener("keyup" , keyUpHandler, false);
       function keyDownHandler(e) {
@@ -76,7 +72,7 @@
         }
         if(e.keyCode===32 && canFire === true) {
           spacePressed=true;
-          lasers.push(new newLaser());
+          lasers.push(new newLaser())
         }
       }
       function keyUpHandler(e) {
@@ -114,54 +110,77 @@
           ctx.closePath();
         })
       }
-      function drawMeteor() {
-        meteors.forEach(function(Meteor,index){
-          ctx.beginPath();
-          ctx.arc(meteor.x, meteor.y, meteorRadius, 0, Math.PI*2);
-          ctx.fillStyle="#420";
-          ctx.fill();
-          ctx.closePath();
-        })
+      newMeteor.prototype.drawMeteor = function() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, meteorRadius, 0, Math.PI*2);
+        ctx.fillStyle="#420";
+        ctx.fill();
+        ctx.closePath();
       }
       function collisionDetection() {
-        lasers.forEach(function(laser,index){
-          if(laser.y+laserSize<=meteor.y+(2*meteorRadius)&&laser.y+laserSize>=meteor.y&&laser.x>=meteor.x-(2*meteorRadius)&&laser.x<=meteor.x) {
-            meteorDraw=1;
-          }
+        meteors.forEach(function(meteor,a){
+          lasers.forEach(function(laser,index){
+            if(laser.y+laserSize<=meteor.y+(2*meteorRadius)&&laser.y+laserSize>=meteor.y&&laser.x>=meteor.x-(2*meteorRadius)&&laser.x<=meteor.x) {
+              meteor.shouldremove=true
+              laser.shouldremove=true
+            }
+          })
         })
       }
 
       function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawTurret();
-        drawPlanet();
-        collisionDetection();
-        if(meteorDraw===0 && fallMeteor===true) {
-          meteors.push(new newMeteor());
-          drawMeteor();
-        }
-        if(rightPressed && turretX < canvas.width-turretSize) {
-          turretX+=5;
-        }
-        else if(leftPressed && turretX > 0) {
-          turretX-=5;
-        }
-        if(spacePressed) {
-          drawLaser();
+        try{
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawTurret();
+          drawPlanet();
+          meteors.forEach(function(meteor,index){
+            if(meteor.draw==0) {
+              meteor.drawMeteor();
+            }
+          })
+          collisionDetection()
+          if(rightPressed && turretX < canvas.width-turretSize) {
+            turretX+=5;
+          }
+          else if(leftPressed && turretX > 0) {
+            turretX-=5;
+          }
+          if(spacePressed) {
+            drawLaser();
+            lasers.forEach(function(laser,index){
+              laser.y-=laserdY;
+              if(laser.y==0){
+                laser.shouldremove=true
+              }
+            })
+            
+          }
+          meteors.forEach(function(meteor,index){
+            if(meteor.y+meteorRadius<=planetY-planetRadius) {
+              meteor.y+=meteordY;
+            }
+            else {
+              meteor.draw=1;
+            }
+          })
+          //cleanup.
           lasers.forEach(function(laser,index){
-            laser.y-=laserdY;
+            if(laser.shouldremove==true){
+              lasers.splice(index,1)
+            }
           })
-        }
-        if(meteor.y+meteorRadius<=planetY-planetRadius) {
-          meteors.forEach(function(Meteor,index){
-            meteor.y+=meteordY;
+          meteors.forEach(function(meteor,index){
+            if(meteor.shouldremove==true){
+              meteors.splice(index,1)
+            }
           })
-        }
-        else {
-          meteorDraw=1;
+        }catch(e){
+          document.getElementById("e").innerHTML=e;
         }
         requestAnimationFrame(draw);
       }
+
+      meteors.unshift(new newMeteor())
       draw();
     </script>
   </body>
