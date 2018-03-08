@@ -52,7 +52,6 @@
         setTimeout(allowFire,750);
         this.shouldRemove=false
       }
-
       function newMeteor(){
         this.x=randomNumberBetween(15,470)
         this.y = 0
@@ -171,15 +170,16 @@
             }) 
           }
           meteors.forEach(function(meteor,index){
-            if(meteor.y+meteorRadius<=planetY-planetRadius) {
+            if(meteor.y+meteorRadius==planetY-planetRadius) {
+              meteor.draw=1;
+              lives--;
               meteor.y+=meteordY;
             }
             else {
-              meteor.draw=1;
-              lives--;
+              meteor.y+=meteordY;
             }
           })
-          //cleanup
+          //Cleanup
           lasers = lasers.filter(laser => !laser.shouldRemove)
           meteors = meteors.filter(meteor => !meteor.shouldRemove)
           if(!lives) {
