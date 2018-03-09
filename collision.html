@@ -20,7 +20,8 @@
       ctx=Collision.getContext("2d");
 
       var turretSize=25,
-          turretX=canvas.width/2;
+          turretX=canvas.width/2,
+          turretdX=6;
 
       var planetX=canvas.width/2,
           planetY=canvas.height*6,
@@ -49,7 +50,7 @@
         this.x=turretX
         this.y=canvas.height-75
         canFire=false;
-        setTimeout(allowFire,750);
+        setTimeout(allowFire,600);
         this.shouldRemove=false
       }
       function newMeteor(){
@@ -142,7 +143,6 @@
       }
 
       function draw() {
-        try{
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           drawTurret();
           drawPlanet();
@@ -155,10 +155,10 @@
           })
           collisionDetection()
           if(rightPressed && turretX < canvas.width-turretSize) {
-            turretX+=5;
+            turretX+=turretdX;
           }
           else if(leftPressed && turretX > 0) {
-            turretX-=5;
+            turretX-=turretdX;
           }
           if(spacePressed) {
             drawLaser();
@@ -186,12 +186,8 @@
             alert("Game Over! You got "+points+" point(s). Would you like to try again?")
             document.location.reload();
           }
-        }catch(e){
-          document.getElementById("e").innerHTML=e;
-        }
         requestAnimationFrame(draw);
       }
-
       meteors.unshift(new newMeteor())
       draw();
     </script>
